@@ -3,7 +3,7 @@ package br.edu.ifce.contacts.ui;
 import br.edu.ifce.contacts.persistence.models.Contact;
 import br.edu.ifce.contacts.persistence.models.ContactGroup;
 import br.edu.ifce.contacts.persistence.models.IContactItem;
-import br.edu.ifce.contacts.IContactBusiness;
+import br.edu.ifce.contacts.IContactListener;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -23,7 +23,7 @@ public class ContactManagerUI extends BaseConsoleView implements IContactListUI 
     private IContactItem currentItem;
     private int currentItemIdx;
 
-    private IContactBusiness contactListener;
+    private IContactListener contactListener;
 
     public ContactManagerUI(ConsoleRenderer renderer) {
         super(renderer);
@@ -71,7 +71,7 @@ public class ContactManagerUI extends BaseConsoleView implements IContactListUI 
     }
 
     @Override
-    public void setContactListener(IContactBusiness listener) {
+    public void setContactListener(IContactListener listener) {
         this.contactListener = listener;
     }
 

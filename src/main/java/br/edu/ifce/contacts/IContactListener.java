@@ -3,7 +3,7 @@ package br.edu.ifce.contacts;
 import br.edu.ifce.contacts.persistence.models.ContactGroup;
 import br.edu.ifce.contacts.persistence.models.IContactItem;
 
-public interface IContactBusiness {
+public interface IContactListener {
     void showContactsList();
 
     void onRequestCreate();

@@ -1,13 +1,13 @@
 package br.edu.ifce.contacts.ui;
 
 import br.edu.ifce.contacts.persistence.models.ContactGroup;
-import br.edu.ifce.contacts.IContactBusiness;
+import br.edu.ifce.contacts.IContactListener;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 
 import java.util.regex.Pattern;
 
 public class CreateContactGroupUI extends BaseConsoleView implements IContactCreateGroupView {
-    private IContactBusiness listener;
+    private IContactListener listener;
 
     private final Pattern namePattern = Pattern.compile(".{2,20}");
 
@@ -16,7 +16,7 @@ public class CreateContactGroupUI extends BaseConsoleView implements IContactCre
     }
 
     @Override
-    public void setContactListener(IContactBusiness listener) {
+    public void setContactListener(IContactListener listener) {
         this.listener = listener;
     }
 

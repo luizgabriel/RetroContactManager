@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ContactFileDatabase implements IContactPersistance {
+public class ContactFileDatabase {
     private String fileName;
     private Gson gson;
 
@@ -55,7 +55,6 @@ public class ContactFileDatabase implements IContactPersistance {
         }
     }
 
-    @Override
     public ContactGroup getRoot() {
         return root;
     }

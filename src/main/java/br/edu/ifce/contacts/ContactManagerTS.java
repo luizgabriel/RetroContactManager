@@ -1,55 +1,86 @@
 package br.edu.ifce.contacts;
 
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
+import br.edu.ifce.contacts.persistence.ContactFileDatabase;
+import br.edu.ifce.contacts.persistence.models.ContactGroup;
 import br.edu.ifce.contacts.persistence.models.IContactItem;
 import br.edu.ifce.contacts.ui.*;
-import br.edu.ifce.contacts.ui.IContactCreateGroupView;
-import br.edu.ifce.contacts.ui.IContactCreateUI;
-import br.edu.ifce.contacts.ui.IContactListUI;
 
 import java.io.IOException;
 
-public class ContactManagerPresentation implements IContactPresentation {
+public class ContactManagerTS implements IContactListener {
     private final ApplicationScreen screen;
 
     private final ApplicationUI baseView;
-    private final IContactListUI contactManagerView;
-    private final IContactCreateUI createContactView;
-    private final IContactCreateGroupView createContactGroupView;
+    private final ContactManagerUI contactManagerView;
+    private final CreateContactUI createContactView;
+    private final CreateContactGroupUI createContactGroupView;
+    
+    private final ContactFileDatabase database;
 
-    public ContactManagerPresentation() throws IOException {
+    public ContactManagerTS() throws IOException {
+        this.database = new ContactFileDatabase("contacts.json");
+        
         this.screen = new ApplicationScreen();
         this.baseView = new ApplicationUI(screen.getRenderer());
 
         contactManagerView = new ContactManagerUI(screen.getRenderer());
         createContactView = new CreateContactUI(screen.getRenderer());
         createContactGroupView = new CreateContactGroupUI(screen.getRenderer());
-    }
 
-    public void setBusiness(IContactBusiness business) {
-        contactManagerView.setContactListener(business);
-        createContactView.setContactListener(business);
-        createContactGroupView.setContactListener(business);
+        contactManagerView.setContactListener(this);
+        createContactView.setContactListener(this);
+        createContactGroupView.setContactListener(this);
 
-        contactManagerView.setRootContactGroup(business.getRootContactGroup());
+        contactManagerView.setRootContactGroup(database.getRoot());
     }
 
     @Override
+    public void showContactsList() {
+        this.showContactListScreen();
+    }
+
+    @Override
+    public void onRequestCreate() {
+        this.showCreateContactScreen();
+    }
+
+    @Override
+    public void onRequestCreateGroup() {
+        this.showCreateContactGroupScreen();
+    }
+
+    @Override
+    public void onRequestDelete(ContactGroup parent, int currentItemIdx) {
+        parent.removeAt(currentItemIdx);
+        database.saveChanges();
+    }
+
+    @Override
+    public void onCreate(IContactItem item) {
+        addContactItem(item);
+        database.saveChanges();
+
+        showContactListScreen();
+    }
+
+    @Override
+    public ContactGroup getRootContactGroup() {
+        return database.getRoot();
+    }
+
     public void showContactListScreen() {
         this.baseView.setCurrentView(contactManagerView);
     }
 
-    @Override
     public void showCreateContactScreen() {
         this.baseView.setCurrentView(createContactView);
     }
 
-    @Override
     public void showCreateContactGroupScreen() {
         this.baseView.setCurrentView(createContactGroupView);
     }
 
-    @Override
     public void addContactItem(IContactItem item) {
         this.contactManagerView.getCurrentParent().add(item);
     }
@@ -74,5 +105,7 @@ public class ContactManagerPresentation implements IContactPresentation {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        database.saveChanges();
     }
 }
