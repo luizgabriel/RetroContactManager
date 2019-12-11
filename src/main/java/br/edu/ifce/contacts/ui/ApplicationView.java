@@ -51,10 +51,10 @@ public class ApplicationView extends BaseConsoleView {
         int height = getRenderer().getScreenHeight();
 
         getRenderer()
-                .bar(0, 0, width, 0)
-                .bar(0, height, width, height)
-                .text("GERENCIADOR DE CONTATOS", 0, 0)
-                .text("F10: SAIR", 0, height);
+                .line(0, 0, width, 0)
+                .line(0, height, width, height)
+                .text(" IFCE - CONTACT MANAGER", 0, 0, true)
+                .text(" [A] ADD CONTACT   [G] ADD GROUP   [F10]: EXIT", 0, height, true);
     }
 
     private void poolInput() throws ApplicationExitException {

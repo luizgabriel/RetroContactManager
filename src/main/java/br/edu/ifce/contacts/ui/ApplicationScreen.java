@@ -15,10 +15,6 @@ public class ApplicationScreen {
         this.renderer = new ConsoleRenderer(this.screen);
     }
 
-    public Screen getScreen() {
-        return screen;
-    }
-
     public ConsoleRenderer getRenderer() {
         return renderer;
     }

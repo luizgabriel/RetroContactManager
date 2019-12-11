@@ -14,7 +14,7 @@ public class ContactController {
 
     public void setView(ContactManagerView view) {
         this.view = view;
-        this.view.buildContactTree(this.database.getRoot());
+        this.view.setRootContactGroup(this.database.getRoot());
     }
 
     public ContactManagerView getView() {

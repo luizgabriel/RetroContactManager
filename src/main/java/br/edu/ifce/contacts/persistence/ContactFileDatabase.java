@@ -36,6 +36,10 @@ public class ContactFileDatabase implements IContactDatabase {
             FileReader reader = new FileReader(this.fileName);
             this.root = this.gson.fromJson(reader, ContactGroup.class);
         } catch (FileNotFoundException e) {
+            this.root = null;
+        }
+
+        if (this.root == null) {
             this.root = new ContactGroup("ROOT");
             this.saveChanges();
         }

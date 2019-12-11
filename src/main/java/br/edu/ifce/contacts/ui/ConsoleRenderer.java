@@ -13,6 +13,7 @@ public class ConsoleRenderer {
     private final Screen screen;
     private TextColor foreColor, backColor;
     private TextCharacter emptyCharacter;
+    private KeyStroke lastKey;
 
     public ConsoleRenderer(Screen screen) {
         this.screen = screen;
@@ -54,7 +55,7 @@ public class ConsoleRenderer {
         return this;
     }
 
-    public ConsoleRenderer bar(int fromX, int fromY, int toX, int toY) {
+    public ConsoleRenderer line(int fromX, int fromY, int toX, int toY) {
         screen.newTextGraphics().drawLine(fromX, fromY, toX, toY, emptyCharacter);
 
         return this;
@@ -62,8 +63,8 @@ public class ConsoleRenderer {
 
     public ConsoleRenderer text(String text, int x, int y, boolean invertedTheme) {
         screen.newTextGraphics()
-                .setBackgroundColor(invertedTheme ? foreColor : backColor)
-                .setForegroundColor(invertedTheme ? backColor : foreColor)
+                .setBackgroundColor(invertedTheme ? backColor : foreColor)
+                .setForegroundColor(invertedTheme ? foreColor : backColor)
                 .putCSIStyledString(x, y, text);
 
         return this;
@@ -75,8 +76,8 @@ public class ConsoleRenderer {
 
     public ConsoleRenderer animatedText(String text, int x, int y, int delay) {
         for (int i = 0; i < text.length(); i++) {
-            cursor(x, y + i);
-            screen.setCharacter(x, (y + i), new TextCharacter(text.charAt(i), foreColor, backColor));
+            cursor(x + i, y);
+            screen.setCharacter(x + i, y, new TextCharacter(text.charAt(i), foreColor, backColor));
 
             wait(ThreadLocalRandom.current().nextInt(delay));
         }
@@ -94,21 +95,34 @@ public class ConsoleRenderer {
         return this;
     }
 
-    public ConsoleRenderer refreshScreen() {
+    public void refreshScreen() {
         try {
             screen.refresh();
+            lastKey = screen.pollInput();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public KeyStroke pollInput() {
+        return lastKey;
+    }
+
+    public ConsoleRenderer clearRect(int x, int y, int width, int height, boolean filled) {
+        for (int i = y; i <= y + height; i++) {
+            text(" ".repeat(width + 1), x, i, filled);
         }
 
         return this;
     }
 
-    public KeyStroke pollInput() {
-        try {
-            return screen.pollInput();
-        } catch (IOException e) {
-            return null;
-        }
+    public ConsoleRenderer rectangle(int x, int y, int width, int height, boolean filled) {
+        return
+                clearRect(x, y, width, height, filled)
+                .line(x, y, x + width, y)
+                .line(x + width, y, x + width, y + height)
+                .line(x, y + height, x + width, y + height)
+                .line(x, y, x, y + height);
+
     }
 }

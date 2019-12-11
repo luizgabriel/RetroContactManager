@@ -7,15 +7,29 @@
 			"email": "luizgabriel.info@gmail.com"
 		},
 		{
-			"name": "Empresa",
+			"name": "Contatos do Bynd",
 			"items": [
 				{
-					"name": "Abraaão",
+					"name": "Abraão",
 					"tel": "(85) 98888-1111",
 					"email": "abraao@bynd.com.br"
 				},
 				{
 					"name": "Carlos",
+					"tel": "(85) 97777-2222"
+				}
+			]
+		},
+		{
+			"name": "Contatos do IFCE",
+			"items": [
+				{
+					"name": "Matheus",
+					"tel": "(85) 98888-1111",
+					"email": "abraao@bynd.com.br"
+				},
+				{
+					"name": "João da Silva",
 					"tel": "(85) 97777-2222"
 				}
 			]
