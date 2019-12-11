@@ -1,6 +1,7 @@
 package br.edu.ifce.contacts.ui;
 
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
+import br.edu.ifce.contacts.views.IView;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -39,9 +40,6 @@ public class ApplicationView extends BaseConsoleView {
 
         getRenderer()
                 .clear()
-                .wait(600)
-                .animatedText(">_ SYSTEM EXIT HOTKEY ON", 0, 0)
-                .wait(1000)
                 .animatedText(">_ SESSION TERMINATED", 0, 1)
                 .wait(1000);
     }
@@ -60,8 +58,10 @@ public class ApplicationView extends BaseConsoleView {
     private void poolInput() throws ApplicationExitException {
         KeyStroke keyStroke = getRenderer().pollInput();
 
-        if (keyStroke != null && keyStroke.getKeyType() == KeyType.F10) {
-            throw new ApplicationExitException();
+        if (keyStroke != null) {
+            if (keyStroke.getKeyType() == KeyType.F10) {
+                throw new ApplicationExitException();
+            }
         }
     }
 

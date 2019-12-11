@@ -1,6 +1,9 @@
 package br.edu.ifce.contacts.ui;
 
 
+import br.edu.ifce.contacts.exceptions.ApplicationExitException;
+import br.edu.ifce.contacts.views.IView;
+
 public abstract class BaseConsoleView implements IView {
     private ConsoleRenderer renderer;
 
@@ -10,5 +13,15 @@ public abstract class BaseConsoleView implements IView {
 
     protected ConsoleRenderer getRenderer() {
         return renderer;
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onFinish() {
+
     }
 }

@@ -48,7 +48,8 @@ public class ContactFileDatabase implements IContactDatabase {
     public void saveChanges() {
         try {
             FileWriter writer = new FileWriter(this.fileName);
-            this.gson.toJson(this.root, ContactGroup.class, writer);
+            this.gson.toJson(this.root, writer);
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

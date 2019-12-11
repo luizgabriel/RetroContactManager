@@ -3,6 +3,8 @@ package br.edu.ifce.contacts.ui;
 import br.edu.ifce.contacts.models.Contact;
 import br.edu.ifce.contacts.models.ContactGroup;
 import br.edu.ifce.contacts.models.IContactItem;
+import br.edu.ifce.contacts.views.IContactListView;
+import br.edu.ifce.contacts.views.listeners.IContactListener;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -10,7 +12,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 
-public class ContactManagerView extends BaseConsoleView {
+public class ContactManagerView extends BaseConsoleView implements IContactListView {
 
     private ContactGroup root;
 
@@ -22,11 +24,14 @@ public class ContactManagerView extends BaseConsoleView {
     private IContactItem currentItem;
     private int currentItemIdx;
 
+    private IContactListener contactListener;
+
     public ContactManagerView(ConsoleRenderer renderer) {
         super(renderer);
         this.groupStack = new ArrayDeque<>();
     }
 
+    @Override
     public void setRootContactGroup(ContactGroup group) {
         this.root = group;
         this.currentItemIdx = 0;
@@ -62,11 +67,20 @@ public class ContactManagerView extends BaseConsoleView {
         row += 1;
     }
 
+    @Override
+    public void setContactListener(IContactListener listener) {
+        this.contactListener = listener;
+    }
 
     //region View Lifetime
     @Override
     public void onUpdate() {
         poolInput();
+
+        int width = getRenderer().getScreenWidth();
+        int height = getRenderer().getScreenHeight();
+
+        getRenderer().clearRect(0, 1, width, height - 2, false);
 
         row = 1;
         col = 1;
@@ -79,8 +93,8 @@ public class ContactManagerView extends BaseConsoleView {
         }
 
         if (currentItem != null) {
-            int x = (int)(getRenderer().getScreenWidth() * 0.4);
-            int y = (int)(getRenderer().getScreenHeight() * 0.2);
+            int x = (int)(width * 0.4);
+            int y = (int)(height * 0.2);
             getRenderer()
                     .rectangle(x, y, 40, 5, true)
                     .text(currentItem.getName() + ":", x + 1, y + 1, true);
@@ -117,37 +131,51 @@ public class ContactManagerView extends BaseConsoleView {
         if (key != null) {
 
             if (key.getKeyType() == KeyType.ArrowDown) {
-                assert groupStack.peekLast() != null;
-                if (currentItemIdx + 1 < groupStack.peekLast().size())
-                    currentItem = groupStack.peekLast().getItems().get(++currentItemIdx);
-            }
-
-            if (key.getKeyType() == KeyType.ArrowUp) {
-                assert groupStack.peekLast() != null;
-                if (currentItemIdx - 1 >= 0)
-                    currentItem = groupStack.peekLast().getItems().get(--currentItemIdx);
-            }
-
-            if (key.getKeyType() == KeyType.ArrowRight) {
-                if (currentItem instanceof ContactGroup) {
-                    ContactGroup group = (ContactGroup) currentItem;
-                    currentItemIdx = 0;
-                    groupStack.addLast(group);
-                    currentItem = group.getItems().get(currentItemIdx);
-                }
-            }
-
-            if (key.getKeyType() == KeyType.ArrowLeft) {
-                if (groupStack.size() > 1)
-                    groupStack.pollLast();
-
-                assert groupStack.peekLast() != null;
-                currentItemIdx = 0;
-                currentItem = groupStack.peekLast().getItems().get(currentItemIdx);
+                moveDown();
+            } else if (key.getKeyType() == KeyType.ArrowUp) {
+                moveUp();
+            } else if (key.getKeyType() == KeyType.ArrowRight) {
+                enterGroup();
+            } else if (key.getKeyType() == KeyType.ArrowLeft) {
+                exitGroup();
+            } else if (key.getCharacter() != null && (key.getCharacter() == 'A' || key.getCharacter() == 'a')) {
+                contactListener.onRequestCreate();
+            } else if (key.getCharacter() != null && (key.getCharacter() == 'G' || key.getCharacter() == 'g')) {
+                contactListener.onRequestCreateGroup();
             }
 
         }
 
+    }
+
+    private void exitGroup() {
+        if (groupStack.size() > 1)
+            groupStack.pollLast();
+
+        assert groupStack.peekLast() != null;
+        currentItemIdx = 0;
+        currentItem = groupStack.peekLast().getItems().get(currentItemIdx);
+    }
+
+    private void enterGroup() {
+        if (currentItem instanceof ContactGroup) {
+            ContactGroup group = (ContactGroup) currentItem;
+            currentItemIdx = 0;
+            groupStack.addLast(group);
+            currentItem = group.getItems().get(currentItemIdx);
+        }
+    }
+
+    private void moveUp() {
+        assert groupStack.peekLast() != null;
+        if (currentItemIdx - 1 >= 0)
+            currentItem = groupStack.peekLast().getItems().get(--currentItemIdx);
+    }
+
+    private void moveDown() {
+        assert groupStack.peekLast() != null;
+        if (currentItemIdx + 1 < groupStack.peekLast().size())
+            currentItem = groupStack.peekLast().getItems().get(++currentItemIdx);
     }
 
 }

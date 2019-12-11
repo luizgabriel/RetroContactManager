@@ -1,4 +1,4 @@
-package br.edu.ifce.contacts.ui;
+package br.edu.ifce.contacts.views;
 
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
 
