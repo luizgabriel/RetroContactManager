@@ -27,9 +27,11 @@ public class ContactFileDatabase implements IContactDatabase {
                 .registerTypeAdapter(Contact.class, contactSerializer)
                 .registerTypeAdapter(ContactGroup.class, contactGroupSerializer)
                 .create();
+
+        this.initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
         try {
             FileReader reader = new FileReader(this.fileName);
             this.root = this.gson.fromJson(reader, ContactGroup.class);
@@ -39,11 +41,10 @@ public class ContactFileDatabase implements IContactDatabase {
         }
     }
 
-    @Override
     public void saveChanges() {
         try {
             FileWriter writer = new FileWriter(this.fileName);
-            this.gson.toJson(this.root, writer);
+            this.gson.toJson(this.root, ContactGroup.class, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

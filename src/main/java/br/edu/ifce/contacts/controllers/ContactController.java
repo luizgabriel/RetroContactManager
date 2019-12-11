@@ -1,27 +1,23 @@
 package br.edu.ifce.contacts.controllers;
 
-import br.edu.ifce.contacts.persistence.ContactFileDatabase;
-import br.edu.ifce.contacts.views.ContactManagerWindow;
+import br.edu.ifce.contacts.persistence.IContactDatabase;
+import br.edu.ifce.contacts.ui.ContactManagerView;
 
 public class ContactController {
 
-    private ContactManagerWindow view;
-    private ContactFileDatabase database;
+    private IContactDatabase database;
+    private ContactManagerView view;
 
-    public ContactController() {
-        this.database = new ContactFileDatabase("contacts.json");
-        this.view = new ContactManagerWindow();
+    public ContactController(IContactDatabase database) {
+        this.database = database;
     }
 
-    public ContactManagerWindow getView() {
-        return view;
-    }
-
-    public void initialize() {
-        this.database.initialize();
-        this.view.initialize();
-
+    public void setView(ContactManagerView view) {
+        this.view = view;
         this.view.buildContactTree(this.database.getRoot());
     }
 
+    public ContactManagerView getView() {
+        return view;
+    }
 }
