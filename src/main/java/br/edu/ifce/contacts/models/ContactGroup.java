@@ -19,6 +19,10 @@ public class ContactGroup implements IContactItem {
         this.items.remove(item);
     }
 
+    public void removeAt(int index) {
+        remove(items.get(index));
+    }
+
     public boolean contains(IContactItem item) {
         return this.items.contains(item);
     }

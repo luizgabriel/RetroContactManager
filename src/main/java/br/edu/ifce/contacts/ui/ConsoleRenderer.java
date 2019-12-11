@@ -3,6 +3,8 @@ package br.edu.ifce.contacts.ui;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 
@@ -11,12 +13,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ConsoleRenderer {
     private final Screen screen;
+    private final WindowBasedTextGUI gui;
+
     private TextColor foreColor, backColor;
     private TextCharacter emptyCharacter;
     private KeyStroke lastKey;
 
     public ConsoleRenderer(Screen screen) {
         this.screen = screen;
+        this.gui = new MultiWindowTextGUI(screen);
         this.setTheme(TextColor.ANSI.BLACK, TextColor.ANSI.WHITE);
     }
 
@@ -124,5 +129,9 @@ public class ConsoleRenderer {
                 .line(x, y + height, x + width, y + height)
                 .line(x, y, x, y + height);
 
+    }
+
+    public WindowBasedTextGUI getGui() {
+        return gui;
     }
 }

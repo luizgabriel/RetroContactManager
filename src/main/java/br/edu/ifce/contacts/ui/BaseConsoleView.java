@@ -17,11 +17,16 @@ public abstract class BaseConsoleView implements IView {
 
     @Override
     public void onStart() {
-
+        //
     }
 
     @Override
     public void onFinish() {
+        //
+    }
 
+    @Override
+    public void onUpdate() throws ApplicationExitException {
+        //
     }
 }

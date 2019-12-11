@@ -34,8 +34,12 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
     @Override
     public void setRootContactGroup(ContactGroup group) {
         this.root = group;
-        this.currentItemIdx = 0;
         this.groupStack.addLast(this.root);
+    }
+
+    @Override
+    public void onStart() {
+        this.currentItemIdx = 0;
 
         if (this.root.size() > 0)
             this.currentItem = this.root.getItems().get(this.currentItemIdx);
@@ -72,7 +76,6 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
         this.contactListener = listener;
     }
 
-    //region View Lifetime
     @Override
     public void onUpdate() {
         poolInput();
@@ -85,45 +88,41 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
         row = 1;
         col = 1;
 
-        for (IContactItem item: root.getItems()) {
-            if (item instanceof ContactGroup)
-                draw((ContactGroup) item);
-            else
-                draw((Contact) item);
+        if (root.size() > 0) {
+            for (IContactItem item : root.getItems()) {
+                if (item instanceof ContactGroup)
+                    draw((ContactGroup) item);
+                else
+                    draw((Contact) item);
+            }
+        } else {
+            getRenderer().text("NO CONTACTS REGISTERED. PRESS [A] TO ADD A NEW CONTACT", (int) (width * 0.2), (int) (height * 0.5));
         }
 
         if (currentItem != null) {
             int x = (int)(width * 0.4);
             int y = (int)(height * 0.2);
-            getRenderer()
-                    .rectangle(x, y, 40, 5, true)
-                    .text(currentItem.getName() + ":", x + 1, y + 1, true);
-
-            if (currentItem instanceof ContactGroup) {
-                ContactGroup group = ((ContactGroup) currentItem);
-                getRenderer().text(group.size() + " contact(s)", x + 2, y + 2, true);
-            } else if (currentItem instanceof Contact) {
-                Contact contact = ((Contact) currentItem);
-
-                getRenderer().text(contact.getTel(), x + 2, y + 3, true);
-
-                if (contact.getEmail() != null && !contact.getEmail().isEmpty())
-                    getRenderer().text(contact.getEmail(), x + 2, y + 4, true);
-            }
-
+            drawCurrentItemBox(x, y);
         }
     }
 
-    @Override
-    public void onStart() {
-        //
-    }
+    private void drawCurrentItemBox(int x, int y) {
+        getRenderer()
+                .rectangle(x, y, 40, 5, true)
+                .text(currentItem.getName() + ":", x + 1, y + 1, true);
 
-    @Override
-    public void onFinish() {
-        //
+        if (currentItem instanceof ContactGroup) {
+            ContactGroup group = ((ContactGroup) currentItem);
+            getRenderer().text(group.size() + " contact(s)", x + 2, y + 2, true);
+        } else if (currentItem instanceof Contact) {
+            Contact contact = ((Contact) currentItem);
+
+            getRenderer().text(contact.getTel(), x + 2, y + 3, true);
+
+            if (contact.getEmail() != null && !contact.getEmail().isEmpty())
+                getRenderer().text(contact.getEmail(), x + 2, y + 4, true);
+        }
     }
-    //endregion
 
     private void poolInput() {
         KeyStroke key = getRenderer().pollInput();
@@ -142,6 +141,8 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
                 contactListener.onRequestCreate();
             } else if (key.getCharacter() != null && (key.getCharacter() == 'G' || key.getCharacter() == 'g')) {
                 contactListener.onRequestCreateGroup();
+            } else if (key.getCharacter() != null && (key.getCharacter() == 'X' || key.getCharacter() == 'x')) {
+                contactListener.onRequestDelete(getLastParent(), currentItemIdx);
             }
 
         }
@@ -152,30 +153,46 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
         if (groupStack.size() > 1)
             groupStack.pollLast();
 
-        assert groupStack.peekLast() != null;
+        assert getLastParent() != null;
         currentItemIdx = 0;
-        currentItem = groupStack.peekLast().getItems().get(currentItemIdx);
+        currentItem = getLastParent().getItems().get(currentItemIdx);
     }
 
     private void enterGroup() {
         if (currentItem instanceof ContactGroup) {
             ContactGroup group = (ContactGroup) currentItem;
-            currentItemIdx = 0;
-            groupStack.addLast(group);
-            currentItem = group.getItems().get(currentItemIdx);
+            if (group.size() > 0) {
+                currentItemIdx = 0;
+                groupStack.addLast(group);
+                currentItem = group.getItems().get(currentItemIdx);
+            }
         }
     }
 
     private void moveUp() {
-        assert groupStack.peekLast() != null;
+        assert getLastParent() != null;
         if (currentItemIdx - 1 >= 0)
-            currentItem = groupStack.peekLast().getItems().get(--currentItemIdx);
+            currentItem =  getLastParent().getItems().get(--currentItemIdx);
+        else
+            exitGroup();
     }
 
     private void moveDown() {
-        assert groupStack.peekLast() != null;
-        if (currentItemIdx + 1 < groupStack.peekLast().size())
-            currentItem = groupStack.peekLast().getItems().get(++currentItemIdx);
+        assert getLastParent() != null;
+        if (currentItemIdx + 1 < getLastParent().size())
+            currentItem = getLastParent().getItems().get(++currentItemIdx);
+    }
+
+    @Override
+    public ContactGroup getCurrentParent() {
+        if (currentItem instanceof ContactGroup)
+            return (ContactGroup) currentItem;
+        else
+            return getLastParent();
+    }
+
+    private ContactGroup getLastParent() {
+        return groupStack.peekLast();
     }
 
 }

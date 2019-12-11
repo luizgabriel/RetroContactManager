@@ -4,10 +4,7 @@ import br.edu.ifce.contacts.controllers.ContactController;
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
 import br.edu.ifce.contacts.persistence.ContactFileDatabase;
 import br.edu.ifce.contacts.persistence.IContactDatabase;
-import br.edu.ifce.contacts.ui.ApplicationView;
-import br.edu.ifce.contacts.ui.ApplicationScreen;
-import br.edu.ifce.contacts.ui.ContactManagerView;
-import br.edu.ifce.contacts.ui.CreateContactView;
+import br.edu.ifce.contacts.ui.*;
 
 import java.io.IOException;
 
@@ -27,13 +24,15 @@ public class Application {
         this.baseView = new ApplicationView(screen.getRenderer());
         ContactManagerView contactManagerView = new ContactManagerView(screen.getRenderer());
         CreateContactView createContactView = new CreateContactView(screen.getRenderer());
+        CreateContactGroupView createContactGroupView = new CreateContactGroupView(screen.getRenderer());
 
         ContactController contactController = new ContactController(database);
         contactController.setView(baseView);
         contactController.setListView(contactManagerView);
         contactController.setCreateView(createContactView);
+        contactController.setCreateGroupView(createContactGroupView);
 
-        contactController.listContacts();
+        contactController.showContactsList();
     }
 
     public void mainLoop() {

@@ -14,13 +14,17 @@ public class ApplicationView extends BaseConsoleView {
     }
 
     public void setCurrentView(IView currentView) {
+        if (this.currentView != null)
+            this.currentView.onFinish();
+
         this.currentView = currentView;
+        this.currentView.onStart();
+        setup();
     }
 
     @Override
     public void onStart() {
         setup();
-        this.currentView.onStart();
     }
 
     @Override
@@ -36,8 +40,6 @@ public class ApplicationView extends BaseConsoleView {
 
     @Override
     public void onFinish() {
-        this.currentView.onFinish();
-
         getRenderer()
                 .clear()
                 .animatedText(">_ SESSION TERMINATED", 0, 1)
@@ -52,7 +54,7 @@ public class ApplicationView extends BaseConsoleView {
                 .line(0, 0, width, 0)
                 .line(0, height, width, height)
                 .text(" IFCE - CONTACT MANAGER", 0, 0, true)
-                .text(" [A] ADD CONTACT   [G] ADD GROUP   [F10]: EXIT", 0, height, true);
+                .text(" [A] ADD CONTACT   [G] ADD GROUP    [X] REMOVE   [F10]: EXIT", 0, height, true);
     }
 
     private void poolInput() throws ApplicationExitException {
