@@ -1,19 +1,18 @@
 package br.edu.ifce.contacts.ui;
 
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
-import br.edu.ifce.contacts.views.IView;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
-public class ApplicationView extends BaseConsoleView {
+public class ApplicationUI extends BaseConsoleView {
 
-    private IView currentView;
+    private IUI currentView;
 
-    public ApplicationView(ConsoleRenderer renderer) {
+    public ApplicationUI(ConsoleRenderer renderer) {
         super(renderer);
     }
 
-    public void setCurrentView(IView currentView) {
+    public void setCurrentView(IUI currentView) {
         if (this.currentView != null)
             this.currentView.onFinish();
 

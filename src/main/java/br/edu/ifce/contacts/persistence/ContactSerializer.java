@@ -1,6 +1,6 @@
 package br.edu.ifce.contacts.persistence;
 
-import br.edu.ifce.contacts.models.Contact;
+import br.edu.ifce.contacts.persistence.models.Contact;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

@@ -1,27 +1,25 @@
 package br.edu.ifce.contacts.ui;
 
-import br.edu.ifce.contacts.exceptions.ApplicationExitException;
-import br.edu.ifce.contacts.models.Contact;
-import br.edu.ifce.contacts.views.IContactCreateView;
-import br.edu.ifce.contacts.views.listeners.IContactListener;
+import br.edu.ifce.contacts.persistence.models.Contact;
+import br.edu.ifce.contacts.IContactBusiness;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 
 import java.util.regex.Pattern;
 
-public class CreateContactView extends BaseConsoleView implements IContactCreateView {
-    private IContactListener listener;
+public class CreateContactUI extends BaseConsoleView implements IContactCreateUI {
+    private IContactBusiness listener;
 
     private final String title = "Create a new Contact";
     private final Pattern namePattern = Pattern.compile(".{2,20}");
     private final Pattern phonePattern = Pattern.compile("[ \\-_+()0-9]{8,}");
     private final Pattern emailPattern = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
 
-    public CreateContactView(ConsoleRenderer renderer) {
+    public CreateContactUI(ConsoleRenderer renderer) {
         super(renderer);
     }
 
     @Override
-    public void setContactListener(IContactListener listener) {
+    public void setContactListener(IContactBusiness listener) {
         this.listener = listener;
     }
 

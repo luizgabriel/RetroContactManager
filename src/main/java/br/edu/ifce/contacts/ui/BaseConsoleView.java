@@ -2,9 +2,8 @@ package br.edu.ifce.contacts.ui;
 
 
 import br.edu.ifce.contacts.exceptions.ApplicationExitException;
-import br.edu.ifce.contacts.views.IView;
 
-public abstract class BaseConsoleView implements IView {
+public abstract class BaseConsoleView implements IUI {
     private ConsoleRenderer renderer;
 
     public BaseConsoleView(ConsoleRenderer renderer) {

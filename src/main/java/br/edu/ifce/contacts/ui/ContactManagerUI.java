@@ -1,10 +1,9 @@
 package br.edu.ifce.contacts.ui;
 
-import br.edu.ifce.contacts.models.Contact;
-import br.edu.ifce.contacts.models.ContactGroup;
-import br.edu.ifce.contacts.models.IContactItem;
-import br.edu.ifce.contacts.views.IContactListView;
-import br.edu.ifce.contacts.views.listeners.IContactListener;
+import br.edu.ifce.contacts.persistence.models.Contact;
+import br.edu.ifce.contacts.persistence.models.ContactGroup;
+import br.edu.ifce.contacts.persistence.models.IContactItem;
+import br.edu.ifce.contacts.IContactBusiness;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -12,7 +11,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 
-public class ContactManagerView extends BaseConsoleView implements IContactListView {
+public class ContactManagerUI extends BaseConsoleView implements IContactListUI {
 
     private ContactGroup root;
 
@@ -24,9 +23,9 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
     private IContactItem currentItem;
     private int currentItemIdx;
 
-    private IContactListener contactListener;
+    private IContactBusiness contactListener;
 
-    public ContactManagerView(ConsoleRenderer renderer) {
+    public ContactManagerUI(ConsoleRenderer renderer) {
         super(renderer);
         this.groupStack = new ArrayDeque<>();
     }
@@ -72,7 +71,7 @@ public class ContactManagerView extends BaseConsoleView implements IContactListV
     }
 
     @Override
-    public void setContactListener(IContactListener listener) {
+    public void setContactListener(IContactBusiness listener) {
         this.contactListener = listener;
     }
 

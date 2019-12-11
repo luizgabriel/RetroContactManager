@@ -1,23 +1,22 @@
 package br.edu.ifce.contacts.ui;
 
-import br.edu.ifce.contacts.models.ContactGroup;
-import br.edu.ifce.contacts.views.IContactCreateGroupView;
-import br.edu.ifce.contacts.views.listeners.IContactListener;
+import br.edu.ifce.contacts.persistence.models.ContactGroup;
+import br.edu.ifce.contacts.IContactBusiness;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 
 import java.util.regex.Pattern;
 
-public class CreateContactGroupView extends BaseConsoleView implements IContactCreateGroupView {
-    private IContactListener listener;
+public class CreateContactGroupUI extends BaseConsoleView implements IContactCreateGroupView {
+    private IContactBusiness listener;
 
     private final Pattern namePattern = Pattern.compile(".{2,20}");
 
-    public CreateContactGroupView(ConsoleRenderer renderer) {
+    public CreateContactGroupUI(ConsoleRenderer renderer) {
         super(renderer);
     }
 
     @Override
-    public void setContactListener(IContactListener listener) {
+    public void setContactListener(IContactBusiness listener) {
         this.listener = listener;
     }
 

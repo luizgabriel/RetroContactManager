@@ -1,8 +1,8 @@
 package br.edu.ifce.contacts.persistence;
 
-import br.edu.ifce.contacts.models.Contact;
-import br.edu.ifce.contacts.models.ContactGroup;
-import br.edu.ifce.contacts.models.IContactItem;
+import br.edu.ifce.contacts.persistence.models.Contact;
+import br.edu.ifce.contacts.persistence.models.ContactGroup;
+import br.edu.ifce.contacts.persistence.models.IContactItem;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

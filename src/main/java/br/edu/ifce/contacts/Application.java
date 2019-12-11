@@ -1,60 +1,32 @@
 package br.edu.ifce.contacts;
 
-import br.edu.ifce.contacts.controllers.ContactController;
-import br.edu.ifce.contacts.exceptions.ApplicationExitException;
 import br.edu.ifce.contacts.persistence.ContactFileDatabase;
-import br.edu.ifce.contacts.persistence.IContactDatabase;
-import br.edu.ifce.contacts.ui.*;
+import br.edu.ifce.contacts.persistence.IContactPersistance;
 
 import java.io.IOException;
 
 public class Application {
-    private final IContactDatabase database;
-    private final ApplicationScreen screen;
+    private final IContactPersistance persistence;
 
-    private final ApplicationView baseView;
-
-    private boolean isRunning;
+    private final ContactManagerBusiness business;
+    private final ContactManagerPresentation presentation;
 
     public Application() throws IOException {
-        this.isRunning = true;
-        this.database = new ContactFileDatabase("contacts.json");
-        this.screen = new ApplicationScreen();
+        this.persistence = new ContactFileDatabase("contacts.json");
+        this.business = new ContactManagerBusiness();
+        this.presentation = new ContactManagerPresentation();
 
-        this.baseView = new ApplicationView(screen.getRenderer());
-        ContactManagerView contactManagerView = new ContactManagerView(screen.getRenderer());
-        CreateContactView createContactView = new CreateContactView(screen.getRenderer());
-        CreateContactGroupView createContactGroupView = new CreateContactGroupView(screen.getRenderer());
+        this.business.setPersistence(this.persistence);
+        this.business.setPresentation(this.presentation);
 
-        ContactController contactController = new ContactController(database);
-        contactController.setView(baseView);
-        contactController.setListView(contactManagerView);
-        contactController.setCreateView(createContactView);
-        contactController.setCreateGroupView(createContactGroupView);
+        this.presentation.setBusiness(this.business);
 
-        contactController.showContactsList();
+        this.presentation.showContactListScreen();
     }
 
     public void mainLoop() {
-        try {
-            screen.start();
-            baseView.onStart();
-
-            while (isRunning) {
-                try {
-                    baseView.onUpdate();
-                } catch (ApplicationExitException e) {
-                    isRunning = false;
-                }
-            }
-
-            baseView.onFinish();
-            screen.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        database.saveChanges();
+        presentation.mainLoop();
+        persistence.saveChanges();
     }
 
     public static void main(String args[]) throws IOException {

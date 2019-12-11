@@ -1,4 +1,4 @@
-package br.edu.ifce.contacts.models;
+package br.edu.ifce.contacts.persistence.models;
 
 public class Contact implements IContactItem {
     private String name;

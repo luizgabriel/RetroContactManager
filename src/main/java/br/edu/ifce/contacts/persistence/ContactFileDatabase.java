@@ -1,7 +1,7 @@
 package br.edu.ifce.contacts.persistence;
 
-import br.edu.ifce.contacts.models.Contact;
-import br.edu.ifce.contacts.models.ContactGroup;
+import br.edu.ifce.contacts.persistence.models.Contact;
+import br.edu.ifce.contacts.persistence.models.ContactGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ContactFileDatabase implements IContactDatabase {
+public class ContactFileDatabase implements IContactPersistance {
     private String fileName;
     private Gson gson;
 
